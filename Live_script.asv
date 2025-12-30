@@ -1,17 +1,15 @@
-clc;
-clear;
-
-%________Taking Inputs___________
+%[text] Taking Inputs
 disp("===== DGA Calculator =====")
-h2 = input('H2 - Hydrogen: ');
-ch4 = input('CH4 - Methane: ');
-c2h6 = input('C2H6 - Ethane: ');
-c2h4 = input('C2H4 - Ethylene: ');
-c2h2 = input('C2H2 - Acetylene: ');
-co = input('CO - Carbon Monoxide: ');
-co2 = input('CO2 - Carbon Dioxide: ');
+h2 = input('H2(ppm) - Hydrogen: ');
+ch4 = input('CH4(ppm) - Methane: ');
+c2h6 = input('C2H6(ppm) - Ethane: ');
+c2h4 = input('C2H4(ppm) - Ethylene: ');
+c2h2 = input('C2H2(ppm) - Acetylene: ');
+co = input('CO(ppm) - Carbon Monoxide: ');
+co2 = input('CO2(ppm) - Carbon Dioxide: ');
 
-%-----------------------Calculating Total Dissolved Combustible Gas--------------------------------
+%[text] Calculating Total Dissolved Combustible Gas
+
 tdcg = h2 + ch4 + c2h6 + c2h4 + c2h2 + co;
 
 fprintf('\n--- Preliminary Assessment ---\n');
@@ -27,9 +25,9 @@ else
     fprintf('Status: Condition 4 (Excessive Decomposition - Immediate Action)\n');
 end
 
-%-----------------------------------------Rogers Ratio Method------------------------------------
+%[text] Rogers Ratio Method
 
-%_________Zero Handling + Ratio Calculation____________
+% Zero Handling + Ratio Calculation
 r1 = NaN; r2 = NaN; r5 = NaN;
 
 if c2h4 > 0, r1 = c2h2/c2h4; end % R1: Acetylene/Ethylene
@@ -38,7 +36,7 @@ if c2h6 > 0, r5 = c2h4/c2h6; end % R5: Ethylene/Ethane
 
 fprintf('\n---> Rogers Ratio Method Method <---\n')
 
-%____________Display Ratio Calculations_____________
+% Display Ratio Calculations 
 fprintf('\nCalculated Ratios:\n');
 fprintf('R1 (C2H2/C2H4): %.2f\n', r1);
 fprintf('R2 (CH4/H2): %.2f\n', r2);
@@ -81,16 +79,8 @@ end
 
 fprintf('\nDiagnosis:\n%s\n', rr_result);
 
-%------------------------------------------Key Gas Method----------------------------------------
+%[text] Key Gas Method
 
-<<<<<<< HEAD
-gases = [h2, ch4, c2h6, c2h4, c2h2, co];
-gas_names = {'Hydrogen', 'Methane', 'Ethane', 'Ethylene', 'Acetylene', 'Carbon Monoxide'};
-[max_value, index] = max(gases);
-dominant_gas = gas_names{index};
-
-=======
->>>>>>> master
 fprintf('\n---> Key Gas Method (Hierarchical Analysis) <---\n')
 
 % Calculating percentages relative to Total Dissolved Combustible Gas (TDCG)
@@ -107,25 +97,6 @@ end
 
 kg_result = 'Normal / Inconclusive';
 
-<<<<<<< HEAD
-% CHECK FOR ARCING (Key Gas: Acetylene)
-% If Acetylene is present in significant amounts (>3-5% of total), 
-% it indicates Arcing, even if H2 is the dominant gas by volume.
-if (p_c2h2 >= 5) && (c2h2 > 0)
-    kg_result = 'High-Energy Discharge (Arcing) [Key Gas: Acetylene]';
-
-% 2. CHECK FOR THERMAL OIL FAULTS (Key Gas: Ethylene)
-% If Ethylene is high, it indicates high-temp oil breakdown.
-elseif (p_c2h4 > 20) && (c2h4 > c2h6)
-    kg_result = 'Thermal Fault in Oil (>700 C) [Key Gas: Ethylene]';
-
-% 3. CHECK FOR CELLULOSE DEGRADATION (Key Gas: CO)
-% If CO is the vast majority (e.g., >80% of gas), it masks other faults.
-elseif (p_co > 80)
-    kg_result = 'Overheating of Insulation Paper [Key Gas: Carbon Monoxide]';
-
-% 4. CHECK FOR LOW-TEMP THERMAL (Key Gas: Methane/Ethane)
-=======
 % ARCING (Key Gas: Acetylene).
 if (p_c2h2 >= 5) && (c2h2 > 0)
     kg_result = 'High-Energy Discharge (Arcing) [Key Gas: Acetylene]';
@@ -139,18 +110,12 @@ elseif (p_co > 80)
     kg_result = 'Overheating of Insulation Paper [Key Gas: Carbon Monoxide]';
 
 % LOW-TEMP THERMAL (Key Gas: Methane/Ethane)
->>>>>>> master
 elseif (p_c2h6 > p_ch4) && (p_c2h6 > p_c2h4)
     kg_result = 'Low-temp Thermal / Oil Decomposition [Key Gas: Ethane]';
 elseif (p_ch4 > p_h2) && (p_ch4 > p_c2h4)
     kg_result = 'Low-temp Thermal (<300 C) [Key Gas: Methane]';
 
-<<<<<<< HEAD
-% 5. CHECK FOR PARTIAL DISCHARGE (Key Gas: Hydrogen)
-% PD is diagnosed only if H2 is dominant AND Acetylene is low.
-=======
 % PARTIAL DISCHARGE (Key Gas: Hydrogen)
->>>>>>> master
 elseif (p_h2 > p_ch4) && (p_h2 > p_c2h4)
     kg_result = 'Partial Discharge (Corona) [Key Gas: Hydrogen]';
 
@@ -158,7 +123,7 @@ end
 
 fprintf('Diagnosis: \n%s\n', kg_result);
 
-%------------------------------------------CO2/CO Ratio----------------------------------------
+%[text] CO2/CO Ratio
 
 fprintf('\n---> CO2/CO Ratio Analysis <---\n');
 
@@ -243,11 +208,6 @@ fprintf('Diagnosis: %s\n', fault);
 
 %----------------------------------Duval Triangle Plot----------------------------------------
 
-<<<<<<< HEAD
-fprintf('\n---> Generating Duval Triangle Plot <---\n');
-
-=======
->>>>>>> master
 % Defining Vertices and Points (a-o)
 top = [0.5, 0.866];   % 100% CH4
 right = [1, 0];       % 100% C2H4
@@ -303,16 +263,17 @@ Y_pt = f_ch4 * 0.866;
 figure('Name', 'Duval Triangle 1', 'Color', '#24273a');
 hold on;
 axis equal;
+grid on;
 axis off; % Hide standard axes
 
 % Draw Zone Patches (Colored)
-fill(PD_x, PD_y, [0.85 0.95 1], 'EdgeColor', '#24273a');   % PD - Pale Blue
-fill(T1_x, T1_y, [1 1 0.8], 'EdgeColor', '#24273a');       % T1 - Pale Yellow
-fill(T2_x, T2_y, [1 0.9 0.7], 'EdgeColor', '#24273a');     % T2 - Pale Orange
-fill(T3_x, T3_y, [1 0.8 0.8], 'EdgeColor', '#24273a');     % T3 - Pale Red
-fill(D1_x, D1_y, [0.8 1 1], 'EdgeColor', '#24273a');       % D1 - Pale Cyan
-fill(D2_x, D2_y, [0.8 0.8 1], 'EdgeColor', '#24273a');     % D2 - Pale Purple
-fill(DT_x, DT_y, [0.9 0.8 1], 'EdgeColor', '#24273a');     % DT - Pale Magenta
+fill(PD_x, PD_y, [0.8500 0.9500 1.0000], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');
+fill(T1_x, T1_y, [1.0000 0.6824 0.6863], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');   
+fill(T2_x, T2_y, [1.0000 0.8000 0.0000], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');    
+fill(T3_x, T3_y, [0.2471 0.2471 0.2471], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');     
+fill(D1_x, D1_y, [0.0000 0.8118 0.8784], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');     
+fill(D2_x, D2_y, [0.1490 0.3216 0.6549], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');    
+fill(DT_x, DT_y, [0.8314 0.3255 0.6392], 'FaceAlpha', 0.3, 'EdgeColor', '#24273a');     
 
 % Adding Zone Labels
 text(mean(PD_x), mean(PD_y), 'PD', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'color', 'r');
@@ -324,7 +285,7 @@ text(0.65, 0.20, 'DT', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'c
 text(0.5, 0.2, 'D2', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'color', 'r'); % Manual placement for D2
 
 % Main Triangle Boundary
-plot([0 1 0.5 0], [0 0 0.866 0], 'k-', 'LineWidth', 2);
+plot([0 1 0.5 0], [0 0 0.866 0], 'k-', 'LineWidth', 1.5);
 
 % Plotting Sample Point
 plot(X_pt, Y_pt, 'go', 'MarkerFaceColor', 'b', 'MarkerSize', 4, 'LineWidth', 1.5);
@@ -340,3 +301,13 @@ text(1.05, 0, '100% C_2H_4', 'HorizontalAlignment', 'left', 'FontSize', 12);
 
 title(['Duval Triangle 1 Diagnosis: ' fault], 'FontSize', 14);
 hold off;
+%[output:7199767f]
+
+%[appendix]{"version":"1.0"}
+%---
+%[metadata:view]
+%   data: {"layout":"onright","rightPanelPercent":15.8}
+%---
+%[output:7199767f]
+%   data: {"dataType":"text","outputData":{"text":"===== DGA Calculator =====\n","truncated":false}}
+%---
