@@ -1,4 +1,4 @@
-_Run this analysis in MATLAB Online_[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=https://github.com/ekah1500/DGA_Diagnostic)
+_Run this analysis in MATLAB Online_[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=https://github.com/ekah1500/DGA_Diagnostic&project=Live_script.m)
 
 # ⚡ MATLAB DGA Diagnostic Tool
 
