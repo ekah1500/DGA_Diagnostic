@@ -2,7 +2,7 @@ _Run this analysis in MATLAB Online_ [![Open in MATLAB Online](https://www.mathw
 
 # ⚡ MATLAB DGA Diagnostic Tool
 
-A professional-grade MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for power transformer health assessment. This tool eliminates manual plotting on Duval Triangles and provides instant fault classification based on oil-dissolved gas concentrations.
+A MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for power transformer health assessment. This tool eliminates manual plotting on Duval Triangles and provides instant fault classification based on oil-dissolved gas concentrations.
 
 ---
 
@@ -40,7 +40,7 @@ This tool is built upon the mathematical frameworks established by:
 ### Running the App
 1. Download or clone this repository.
 2. Open MATLAB and navigate to the project folder.
-3. Open the `DGA_Calculator.mlapp` file in **App Designer** or simply type the filename in the **Command Window** to run.
+3. Open the `app1.mlapp` file in **App Designer** or simply type the filename in the **Command Window** to run.
 
 ---
 
