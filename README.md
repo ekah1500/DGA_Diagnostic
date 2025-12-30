@@ -1,4 +1,7 @@
 [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=ekah1500/DGA_Diagnostic&file=https://github.com/ekah1500/DGA_Diagnostic/blob/main/DGA_Calculator.m)
+
+_Run this analysis in MATLAB Online_[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=https://github.com/ekah1500/DGA_Diagnostic&file=Live_script.m)
+
 # ⚡ MATLAB DGA Diagnostic Tool
 
 A professional-grade MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for power transformer health assessment. This tool eliminates manual plotting on Duval Triangles and provides instant fault classification based on oil-dissolved gas concentrations.
