@@ -267,14 +267,14 @@ hold on;
 axis equal;
 axis off; % Hide standard axes
 
-% Draw Zone Patches (Colored)
-fill(PD_x, PD_y, [0.85 0.95 1], 'EdgeColor', '#24273a');   % PD - Pale Blue
-fill(T1_x, T1_y, [1 1 0.8], 'EdgeColor', '#24273a');       % T1 - Pale Yellow
-fill(T2_x, T2_y, [1 0.9 0.7], 'EdgeColor', '#24273a');     % T2 - Pale Orange
-fill(T3_x, T3_y, [1 0.8 0.8], 'EdgeColor', '#24273a');     % T3 - Pale Red
-fill(D1_x, D1_y, [0.8 1 1], 'EdgeColor', '#24273a');       % D1 - Pale Cyan
-fill(D2_x, D2_y, [0.8 0.8 1], 'EdgeColor', '#24273a');     % D2 - Pale Purple
-fill(DT_x, DT_y, [0.9 0.8 1], 'EdgeColor', '#24273a');     % DT - Pale Magenta
+% Zone Patches (Colored)
+fill(PD_x, PD_y, [0.8500 0.9500 1.0000], 'EdgeColor', '#24273a');   % PD - Pale Blue
+fill(T1_x, T1_y, [1.0000 0.6824 0.6863], 'EdgeColor', '#24273a');       % T1 - Pale Yellow
+fill(T2_x, T2_y, [1.0000 0.8000 0.0000], 'EdgeColor', '#24273a');     % T2 - Pale Orange
+fill(T3_x, T3_y, [0.2471 0.2471 0.2471], 'EdgeColor', '#24273a');     % T3 - Pale Red
+fill(D1_x, D1_y, [0.0000 0.8118 0.8784], 'EdgeColor', '#24273a');       % D1 - Pale Cyan
+fill(D2_x, D2_y, [0.1490 0.3216 0.6549], 'EdgeColor', '#24273a');     % D2 - Pale Purple
+fill(DT_x, DT_y, [0.8314 0.3255 0.6392], 'EdgeColor', '#24273a');     % DT - Pale Magenta
 
 % Adding Zone Labels
 text(mean(PD_x), mean(PD_y), 'PD', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'color', 'r');
@@ -286,7 +286,7 @@ text(0.65, 0.20, 'DT', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'c
 text(0.5, 0.2, 'D2', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'color', 'r'); % Manual placement for D2
 
 % Main Triangle Boundary
-plot([0 1 0.5 0], [0 0 0.866 0], 'k-', 'LineWidth', 2);
+plot([0 1 0.5 0], [0 0 0.866 0], 'k-', 'LineWidth', 1.2);
 
 % Plotting Sample Point
 plot(X_pt, Y_pt, 'go', 'MarkerFaceColor', 'b', 'MarkerSize', 4, 'LineWidth', 1.5);
