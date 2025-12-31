@@ -1,4 +1,4 @@
-_Run this analysis in MATLAB Online_ [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=ekah1500/DGA_Diagnostic)
+ [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=ekah1500/DGA_Diagnostic) ^-^ [![View DGA_Diagnostic on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://in.mathworks.com/matlabcentral/fileexchange/182950-dga_diagnostic)
 
 # ⚡ MATLAB DGA Diagnostic Tool
 
