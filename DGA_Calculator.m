@@ -11,7 +11,7 @@ c2h2 = input('C2H2 - Acetylene: ');
 co = input('CO - Carbon Monoxide: ');
 co2 = input('CO2 - Carbon Dioxide: ');
 
-%-----------------------Calculating Total Dissolved Combustible Gas--------------------------------
+%----------------------- Calculating Total Dissolved Combustible Gas --------------------------------
 tdcg = h2 + ch4 + c2h6 + c2h4 + c2h2 + co;
 
 fprintf('\n--- Preliminary Assessment ---\n');
@@ -26,15 +26,25 @@ elseif tdcg > 1920 && tdcg <= 4630
 else
     fprintf('Status: Condition 4 (Excessive Decomposition - Immediate Action)\n');
 end
-
-%-----------------------------------------Rogers Ratio Method------------------------------------
+ 
+%----------------------------------------- Rogers Ratio Method ------------------------------------
 
 %_________Zero Handling + Ratio Calculation____________
-r1 = NaN; r2 = NaN; r5 = NaN;
 
-if c2h4 > 0, r1 = c2h2/c2h4; end % R1: Acetylene/Ethylene
-if h2 > 0,   r2 = ch4/h2;   end % R2: Methane/Hydrogen
-if c2h6 > 0, r5 = c2h4/c2h6; end % R5: Ethylene/Ethane
+if c2h4 > 0, r1 = c2h2 / c2h4;
+elseif c2h2 == 0, r1 = 0;       % 0/0 -> 0 for Normal Logic (Normal is < 0.1)
+else, r1 = 999;                 % High/0 -> Infinity (Arcing)
+end
+
+if h2 > 0, r2 = ch4 / h2;
+elseif ch4 == 0, r2 = 0;
+else, r2 = 999;
+end
+
+if c2h6 > 0, r5 = c2h4 / c2h6;
+elseif c2h4 == 0, r5 = 0;
+else, r5 = 999;
+end
 
 fprintf('\n---> Rogers Ratio Method Method <---\n')
 
@@ -43,16 +53,6 @@ fprintf('\nCalculated Ratios:\n');
 fprintf('R1 (C2H2/C2H4): %.2f\n', r1);
 fprintf('R2 (CH4/H2): %.2f\n', r2);
 fprintf('R5 (C2H4/C2H6): %.2f\n', r5);
-
-%_______________________________________(Comparison Logic)_______________________________________   
-%| Fault Type                                   | R1 (C₂H₂/C₂H₄) | R2 (CH₄/H₂) | R5 (C₂H₄/C₂H₆) |
-%| -------------------------------------------- | -------------- | ----------- | -------------- |
-%| Normal Condition                             | < 0.1          | 0.1 – 1.0   | < 1.0          |
-%| Partial Discharge (PD)                       | < 0.1          | < 0.1       | < 1.0          |
-%| High Energy Discharge (Arcing)               | 0.1 – 3.0      | 0.1 – 1.0   | > 3.0          |
-%| Low Temperature Thermal Fault (<300°C)       | < 0.1          | 0.1 – 1.0   | 1.0 – 3.0      |
-%| Medium Temperature Thermal Fault (300–700°C) | < 0.1          | > 1.0       | 1.0 – 3.0      |
-%| High Temperature Thermal Fault (>700°C)      | < 0.1          | > 1.0       | > 3.0          |
 
 if isnan(r1) || isnan(r2) || isnan(r5) %Checking for NaN values
     rr_result = 'Warning: Invalid input.';
@@ -81,7 +81,7 @@ end
 
 fprintf('\nDiagnosis:\n%s\n', rr_result);
 
-%------------------------------------------Key Gas Method----------------------------------------
+%------------------------------------------ Key Gas Method ----------------------------------------
 
 fprintf('\n---> Key Gas Method (Hierarchical Analysis) <---\n')
 
@@ -125,7 +125,7 @@ end
 
 fprintf('Diagnosis: \n%s\n', kg_result);
 
-%------------------------------------------CO2/CO Ratio----------------------------------------
+%------------------------------------------ CO2/CO Ratio ----------------------------------------
 
 fprintf('\n---> CO2/CO Ratio Analysis <---\n');
 
@@ -144,71 +144,7 @@ else
     fprintf('CO2/CO Ratio: N/A Invalid Input.\n');
 end
 
-%----------------------------------Duval triangle 1----------------------------------------
-
-fprintf('\n---> Duval triangle <---\n');
-
-gas_sum = ch4 + c2h4 + c2h2;
-p_ch4 = (ch4/gas_sum) * 100; p_c2h4 = (c2h4/gas_sum) * 100; p_c2h2 = (c2h2/gas_sum) * 100; %Percentages
-
-%____________Creating states___________________
-
-% Gases   | Value	State	  |  Value	State	   | Value	State
-%---------|-------------------|--------------------|---------------
-% CH4	  | 0–98	State 0	  | 98–100	State 1	   | 
-% C2H2	  | 0–4 	State 0	  | 4–13	State 1	   |  13–15	State 2
-%    	  | 15–29	State 3	  | 29–100	State 4	   | 
-% C2H4	  | 0–20	State 0	  | 20–23	State 1	   | 23–40	State 2
-%    	  | 40–50	State 3	  | 50–100	State 4	   | 
-
-if (p_ch4 < 98), ch4_state = 0;
-else, ch4_state = 1;
-end
-if (p_c2h2 < 4), c2h2_state = 0;
-elseif (p_c2h2 >= 4 && p_c2h2 < 13), c2h2_state = 1; 
-elseif (p_c2h2 >= 13 && p_c2h2 < 15), c2h2_state = 2;
-elseif (p_c2h2 >= 15 && p_c2h2 < 29), c2h2_state = 3;
-else, c2h2_state = 4;
-end
-if (p_c2h4 < 20), c2h4_state = 0;
-elseif (p_c2h4 >= 20 && p_c2h4 < 23), c2h4_state = 1;
-elseif (p_c2h4 >= 23 && p_c2h4 < 40), c2h4_state = 2;
-elseif (p_c2h4 >= 40 && p_c2h4 < 50), c2h4_state = 3;
-else, c2h4_state = 4;
-end
-
-%____________________Finding Faults_________________________________
-
-% Faults |	CH4	        |    C2H2                       |   C2H4
-%--------|--------------|-------------------------------|---------------------------------
-% PD	 | State 1	    | Any state	                    | Any state
-% D1	 | State 0	    | State 2–State 3–State 4	    | State 0–State 1
-% D2	 | State 0	    | State 2–State 3	            | State 2
-% 	     | State 0   	| State 4	                    | State 2–State 3–State 4
-% T1	 | State 0   	| State 0	                    | State 0
-% T2	 | State 0	    | State 0	                    | State 1–State 2–State 3
-% T3	 | State 0	    | State 0–State 1–State 2	    | State 4
-% DT     | State 0      | State 1	                    | State 0–State 1–State 2–State 3
-%  	     | State 0	    | State 2	                    | State 3
-% 	     | State 0   	| State 3	                    | State 3–State 4
-
-fault = 'Undetermined / Boundary Case';
-
-if (ch4_state == 1), fault = 'PD: Partial Discharge';
-elseif (ch4_state == 0) && (c2h2_state == 2 || c2h2_state == 3 || c2h2_state == 4) && (c2h4_state == 0 || c2h4_state == 1), fault = 'D1: Low energy discharge (Sparking)';
-elseif (ch4_state == 0) && (c2h2_state == 2 || c2h2_state == 3) && (c2h4_state == 2), fault = 'D2: High energy discharge (Arcing)';
-elseif (ch4_state == 0) && (c2h2_state == 4) && (c2h4_state == 2 || c2h4_state == 3 || c2h4_state == 4), fault = 'D2: High energy discharge (Arcing)';
-elseif (ch4_state == 0) && (c2h2_state == 0) && (c2h4_state == 0), fault = 'T1: Low Temperature Thermal Fault (<300C)';
-elseif (ch4_state == 0) && (c2h2_state == 0) && (c2h4_state == 1 || c2h4_state == 2 || c2h4_state == 3), fault = 'T2: Medium Temperature Thermal Fault (300-700C)';
-elseif (ch4_state == 0) && (c2h2_state == 0 || c2h2_state == 1 || c2h2_state == 2) && (c2h4_state == 4), fault = 'T3: High Temperaure Thermal Fault (>700C)';
-elseif (ch4_state == 0) && (c2h2_state == 1) && (c2h4_state == 0 || c2h4_state == 1 || c2h4_state == 2 || c2h4_state == 3), fault = 'DT: Mix of thermal and electrical faults';
-elseif (ch4_state == 0) && (c2h2_state == 2) && (c2h4_state == 3), fault = 'DT: Mix of thermal and electrical faults';
-elseif (ch4_state == 0) && (c2h2_state == 3) && (c2h4_state == 3 || c2h4_state == 4), fault = 'DT: Mix of thermal and electrical faults';
-end
-
-fprintf('Diagnosis: %s\n', fault);
-
-%----------------------------------Duval Triangle Plot----------------------------------------
+%---------------------------------- Duval triangle 1----------------------------------------
 
 % Defining Vertices and Points (a-o)
 top = [0.5, 0.866];   % 100% CH4
@@ -248,11 +184,15 @@ D2_y = [m(2), l(2), k(2), J(2), o(2)];
 DT_x = [c(1), d(1), f(1), h(1), I(1), J(1), k(1), l(1), m(1), n(1)];
 DT_y = [c(2), d(2), f(2), h(2), I(2), J(2), k(2), l(2), m(2), n(2)];
 
+gas_sum_dt1 = ch4 + c2h4 + c2h2;
+p_ch4 = (ch4/gas_sum_dt1) * 100; p_c2h4 = (c2h4/gas_sum_dt1) * 100; p_c2h2 = (c2h2/gas_sum_dt1) * 100; %Percentages
+
+
 % Calculating Sample Point (X, Y)
 % Using fractions (0-1), not percentages (0-100) for the coordinate formula
-if gas_sum > 0
-    f_ch4 = ch4 / gas_sum;
-    f_c2h4 = c2h4 / gas_sum;
+if gas_sum_dt1 > 0
+    f_ch4 = ch4 / gas_sum_dt1;
+    f_c2h4 = c2h4 / gas_sum_dt1;
 else
     f_ch4 = 0; f_c2h4 = 0;
 end
@@ -261,6 +201,20 @@ end
 X_pt = ((f_c2h4 / 0.866) + (f_ch4 / 1.732)) * 0.866;
 Y_pt = f_ch4 * 0.866;
 
+% Using Geometric Diagnosis to check if the point is in polygon or not
+if inpolygon(X_pt, Y_pt, PD_x, PD_y), dt1_fault = 'PD: Partial Discharge';
+elseif inpolygon(X_pt, Y_pt, T1_x, T1_y), dt1_fault = 'T1: Low Temperature Thermal Fault (<300C)';
+elseif inpolygon(X_pt, Y_pt, T2_x, T2_y), dt1_fault = 'T2: Med Temperature Thermal Fault (300-700C)';
+elseif inpolygon(X_pt, Y_pt, T3_x, T3_y), dt1_fault = 'T3: High Temperature Thermal Fault (>700C)';
+elseif inpolygon(X_pt, Y_pt, D1_x, D1_y), dt1_fault = 'D1: Low Energy Discharge';
+elseif inpolygon(X_pt, Y_pt, D2_x, D2_y), dt1_fault = 'D2: High Energy Discharge';
+elseif inpolygon(X_pt, Y_pt, DT_x, DT_y), dt1_fault = 'DT: Mix of Thermal/Electrical';
+else, dt1_fault = 'Undetermined / Boundary';
+end
+
+fprintf('\n---> Duval triangle <---\n');
+fprintf('Diagnosis: %s\n', dt1_fault);
+
 % Plotting Graph
 figure('Name', 'Duval Triangle 1', 'Color', '#24273a');
 hold on;
@@ -268,13 +222,13 @@ axis equal;
 axis off; % Hide standard axes
 
 % Zone Patches (Colored)
-fill(PD_x, PD_y, [0.8500 0.9500 1.0000], 'EdgeColor', '#24273a');   % PD - Pale Blue
-fill(T1_x, T1_y, [1.0000 0.6824 0.6863], 'EdgeColor', '#24273a');       % T1 - Pale Yellow
-fill(T2_x, T2_y, [1.0000 0.8000 0.0000], 'EdgeColor', '#24273a');     % T2 - Pale Orange
-fill(T3_x, T3_y, [0.2471 0.2471 0.2471], 'EdgeColor', '#24273a');     % T3 - Pale Red
-fill(D1_x, D1_y, [0.0000 0.8118 0.8784], 'EdgeColor', '#24273a');       % D1 - Pale Cyan
-fill(D2_x, D2_y, [0.1490 0.3216 0.6549], 'EdgeColor', '#24273a');     % D2 - Pale Purple
-fill(DT_x, DT_y, [0.8314 0.3255 0.6392], 'EdgeColor', '#24273a');     % DT - Pale Magenta
+fill(PD_x, PD_y, [0.8500 0.9500 1.0000], 'EdgeColor', '#24273a');   
+fill(T1_x, T1_y, [1.0000 0.6824 0.6863], 'EdgeColor', '#24273a');      
+fill(T2_x, T2_y, [1.0000 0.8000 0.0000], 'EdgeColor', '#24273a');    
+fill(T3_x, T3_y, [0.2471 0.2471 0.2471], 'EdgeColor', '#24273a');    
+fill(D1_x, D1_y, [0.0000 0.8118 0.8784], 'EdgeColor', '#24273a');     
+fill(D2_x, D2_y, [0.1490 0.3216 0.6549], 'EdgeColor', '#24273a');    
+fill(DT_x, DT_y, [0.8314 0.3255 0.6392], 'EdgeColor', '#24273a');    
 
 % Adding Zone Labels
 text(mean(PD_x), mean(PD_y), 'PD', 'HorizontalAlignment', 'center', 'FontWeight', 'bold', 'color', 'r');
@@ -296,9 +250,168 @@ text(X_pt + 0.03, Y_pt, sprintf('  Fault\n  (%.1f, %.1f, %.1f)', p_ch4, p_c2h4, 
     'BackgroundColor', '#cad3f5', 'color', 'k', 'EdgeColor', 'r', 'LineWidth', 1, 'Margin', 1);
 
 % Corner Labels
-text(0.5, 0.92, '100% CH_4', 'HorizontalAlignment', 'center', 'FontSize', 12);
-text(-0.05, 0, '100% C_2H_2', 'HorizontalAlignment', 'right', 'FontSize', 12);
-text(1.05, 0, '100% C_2H_4', 'HorizontalAlignment', 'left', 'FontSize', 12);
+text(0.215, 0.45, '% CH_4', 'Rotation', 60, 'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold');
+text(0.77, 0.48, '% C_2H_4', 'Rotation', -60, 'HorizontalAlignment', 'left', 'FontSize', 12, 'FontWeight', 'bold');
+text(0.5, -0.05, '% C_2H_4', 'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold');
 
-title(['Duval Triangle 1 Diagnosis: ' fault], 'FontSize', 14);
+% Title
+title(['Duval Triangle 1 Diagnosis: ' dt1_fault], 'FontSize', 14);
 hold off;
+
+
+%---------------------------------- Duval Triangle 4 ----------------------------------------
+
+if  strcmp(dt1_fault,'PD: Partial Discharge') || strcmp(dt1_fault, 'T1: Low Temperature Thermal Fault (<300C)')...
+        || strcmp(dt1_fault, 'T2: Medium Temperature Thermal Fault (300-700C)')
+    plot_dt4(h2, ch4, c2h6);
+end
+
+function plot_dt4(h2, ch4, c2h6)
+    fprintf('The fault zones are shown on Duval trangle 4\n')
+    % Coordinates: H2 (Top), CH4 (Right), C2H6 (Left)
+    figure('Color', '#24273a', 'Name', 'Duval Triangle 4', 'NumberTitle', 'off');
+    hold on;
+    axis equal;
+    axis off;
+    
+    % --- Vertices of the Main Triangle ---
+
+    % Top (H2=100), Right (CH4=100), Left (C2H6=100)
+    % Cartesian Co-ordinates: x ranges 0-100
+    % Converting Triangular (h, m, e) to Cartesian (x, y)
+   
+    triangular = @(h, m, e) [ (m + 0.5*h), (h * sqrt(3)/2) ];
+    
+    Top   = triangular(100, 0, 0);
+    Right = triangular(0, 100, 0);
+    Left  = triangular(0, 0, 100);
+    
+    % Triangle Outline
+    plot([Top(1) Left(1) Right(1) Top(1)], [Top(2) Left(2) Right(2) Top(2)], 'k', 'LineWidth', 1.2);
+    
+    % --- Defining Regions as per IEEE-C57.104.2019 ---
+
+    % -- PD (Partial Discharge) --
+    % 2 <= CH4 < 15, C2H6 < 1
+    p_pd = [
+        triangular(98, 2, 0);    % Right top edge
+        triangular(97, 2, 1);    % Inner corner
+        triangular(84, 15, 1);   % Inner corner
+        triangular(85, 15, 0);   % Left top edge
+    ];
+
+    % -- ND (Not Determined) --
+    % H2 >= 9, C2H6 >= 46
+    p_nd = [
+        triangular(54, 0, 46);   % Top tip of ND (on Left axis)
+        triangular(9, 45, 46);   % Right corner (intersection H=9, E=46)
+        triangular(9, 0, 91);    % Bottom corner (on Left axis)
+    ];
+
+    % -- O (Overheating) --
+    % H2 < 9, C2H6 >= 30
+    p_o = [
+        triangular(9, 0, 91);    % Top Left (meets ND)
+        triangular(9, 61, 30);   % Top Right (intersection H=9, E=30)
+        triangular(0, 70, 30);   % Bottom Right (on axis H=0)
+        triangular(0, 0, 100);   % Bottom Left Vertex (C2H6=100)
+    ];
+
+    % -- C (Carbonisation) --
+    % Part 1: CH4 >= 36 AND C2H4 >= 24
+    % Part 2: H2 < 15 AND 24 <= C2H6 < 30
+    p_c = [
+        triangular(0, 100, 0);   % Bottom Right Vertex (CH4=100)
+        triangular(0, 70, 30);   % Bottom edge (meets O)
+        triangular(15, 55, 30);  % Inner Step 1 (H=15, E=30)
+        triangular(15, 61, 24);  % Inner Step 2 (H=15, E=24)
+        triangular(40, 36, 24);  % Inner Step 3 (M=36, E=24)
+        triangular(64, 36, 0);   % Right Axis (M=36, E=0)
+    ];
+
+    % -- S (Stray Gassing) --
+    % Fills the center by connecting the surrounding points.
+    p_s = [
+        triangular(98, 2, 0);    % Start at PD top
+        triangular(97, 2, 1);    % PD boundary
+        triangular(84, 15, 1);   % PD boundary
+        triangular(85, 15, 0);   % Right Axis
+        triangular(64, 36, 0);   % Meets C
+        triangular(40, 36, 24);  % C boundary
+        triangular(15, 61, 24);  % C boundary
+        triangular(15, 55, 30);  % C boundary
+        triangular(9, 61, 30);   % O boundary
+        triangular(9, 45, 46);   % ND boundary
+        triangular(54, 0, 46);   % ND boundary (Left Axis)
+        % Follow Left Axis up
+        triangular(100, 0, 0);   % Top Vertex
+    ];
+    
+    % --- Patches ---
+    function fill_poly(pts, color)
+             patch(pts(:,1), pts(:,2), color, 'EdgeColor', 'k', 'LineWidth', 1);
+    end
+
+    fill_poly(p_s,  [0.95, 0.95, 1.0]); % S 
+    fill_poly(p_pd, [0.8, 0.9, 1.0]);   % PD
+    fill_poly(p_nd, [0.9, 1.0, 0.9]);   % ND 
+    fill_poly(p_o,  [1.0, 0.9, 0.6]);   % O 
+    fill_poly(p_c,  [0.6, 0.6, 0.6]);   % C
+
+    % --- Labels ---
+    function text_loc(h, m, ~, str) % Helper to place text using triangular co-ords
+            loc = [ (m + 0.5*h), (h * sqrt(3)/2) ];
+            text(loc(1), loc(2), str, 'Color', 'r', 'HorizontalAlignment', 'center', 'FontWeight', 'bold');
+    end
+
+    text_loc(92, 9, 3, 'PD');
+    text_loc(50, 20, 30, 'S');
+    text_loc(25, 10, 65, 'ND');
+    text_loc(4, 30, 66, 'O');
+    text_loc(15, 70, 15, 'C');
+
+    % --- Axes Labels ---
+    % Left Label (H2)
+    text(23, 48, '% H_2', 'Rotation', 60, 'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold');
+    
+    % Right Label (CH4)
+    text(75, 50, '% CH_4', 'Rotation', -60, 'HorizontalAlignment', 'left', 'FontSize', 12, 'FontWeight', 'bold');
+    
+    % Bottom Label (C2H6)
+    text(50, -5, '% C_2H_6', 'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold');
+    
+    % Title
+    title('Duval Triangle 4 (Low Temperature Faults)', 'FontSize', 12);
+
+    gas_sum_dt4 = h2 + ch4 + c2h6;
+    p_ch4 = (ch4/gas_sum_dt4) * 100; p_h2 = (h2/gas_sum_dt4) * 100; p_c2h6 = (c2h6/gas_sum_dt4) * 100; %Percentages
+    pt_dt4 = triangular(p_h2, p_ch4, p_c2h6);
+    X4 = pt_dt4(1); Y4 = pt_dt4(2);
+
+    % Geometric Diagnosis
+    if inpolygon(X4, Y4, p_pd(:,1), p_pd(:,2)), dt4_fault = 'PD - Partial Discharge';
+    elseif inpolygon(X4, Y4, p_s(:,1), p_s(:,2)), dt4_fault = 'S - Stray Gassing';
+    elseif inpolygon(X4, Y4, p_c(:,1), p_c(:,2)), dt4_fault = 'C - Carbonisation';
+    elseif inpolygon(X4, Y4, p_o(:,1), p_o(:,2)), dt4_fault = 'O - Overheating';
+    elseif inpolygon(X4, Y4, p_nd(:,1), p_nd(:,2)), dt4_fault = 'ND - Undefined';
+    else, dt4_fault = 'Undetermined / Boundary';
+    end
+
+    % --- Fault Point ---
+    
+    % Converting inputs (a,b,c) to x,y
+    triangular = @(h, m, e) [ (m + 0.5*h), (h * sqrt(3)/2) ];
+    input = triangular(p_h2, p_ch4, p_c2h6);
+    
+    % Plotting Sample Point
+    plot(input(1), input(2), 'go', 'MarkerSize', 4, 'MarkerFaceColor', 'b', 'LineWidth', 1.5);
+    
+    % Label to sample point
+    text(input(1) + 2, input(2), sprintf('  Fault\n  (%.1f, %.1f, %.1f)', p_h2, p_ch4, p_c2h6), ...
+    'BackgroundColor', '#cad3f5', 'color', 'k', 'EdgeColor', 'k', 'LineWidth', 1, 'Margin', 1);
+    % Update Title
+    title(['Duval Triangle 4 Diagnosis: ' dt4_fault], 'FontSize', 14);
+
+    fprintf('Diagnosis: %s\n', dt4_fault);
+end
+
