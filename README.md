@@ -19,7 +19,7 @@ A MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for p
 This tool is built upon the mathematical frameworks established by:
 * **🇺🇸 IEEE Std C57.104-2019:** Guidelines for the interpretation of gases generated in mineral oil-immersed transformers.
 * **🇪🇺 IEC 60599:** Mineral oil-filled electrical equipment in service – Guidance on the interpretation of dissolved and free gases analysis.
-* **📐 Duval's Methods:** Geometric coordinate mapping for Triangle 1
+* **📐 Duval's Methods:** Geometric coordinate mapping for Triangle 1 and 4
   
 ---
 
