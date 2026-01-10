@@ -8,7 +8,7 @@ A MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for p
 
 ## 🚀 Features
 
-* **📉 Automated Fault Plotting:** Converts ppm values ($H_2$, $CH_4$, $C_2H_2$, $C_2H_4$, $C_2H_6$) into precise coordinates for **Duval Triangles 1**.
+* **📉 Automated Fault Plotting:** Converts ppm values ($H_2$, $CH_4$, $C_2H_2$, $C_2H_4$, $C_2H_6$) into precise coordinates for **Duval Triangles 1 & 4 (Working on 5)**.
 * **📜 Standardized Methods:** Implements industry-standard diagnostic logic:
     * **Rogers Ratio Method**
     * **Key Gas Analysis**
