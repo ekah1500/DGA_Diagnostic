@@ -1,8 +1,8 @@
  [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=ekah1500/DGA_Diagnostic) ^-^ [![View DGA_Diagnostic on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://in.mathworks.com/matlabcentral/fileexchange/182950-dga_diagnostic)
 
-# ⚡ MATLAB DGA Diagnostic Tool
+# ⚡ DGA Diagnostic Tool
 
-A MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for power transformer health assessment. This tool eliminates manual plotting on Duval Triangles and provides instant fault classification based on oil-dissolved gas concentrations.
+An application designed to automate **Dissolved Gas Analysis (DGA)** for power transformer health assessment. This tool eliminates manual plotting on Duval Triangles and provides instant fault classification based on oil-dissolved gas concentrations.
 
 ---
 
@@ -12,7 +12,7 @@ A MATLAB application designed to automate **Dissolved Gas Analysis (DGA)** for p
 * **📜 Standardized Methods:** Implements industry-standard diagnostic logic:
     * **Rogers Ratio Method**
     * **Key Gas Analysis**
-* **🖥️ Interactive UI:** A clean interface built with MATLAB App Designer featuring real-time data entry and visual feedback.
+* **🖥️ Interactive UI:** A clean interface built with MATLAB App Designer featuring real-time data entry and visual feedback (no UI for .exe file yet).
 * **⚠️ Fault Identification:** Detects incipient faults including Partial Discharge (PD), Thermal Faults (T1, T2, T3), and High/Low Energy Arcing (D1, D2).
 
 ## 📚 Standards Compliance
@@ -35,13 +35,13 @@ This tool is built upon the mathematical frameworks established by:
 ## 🛠️ Installation & Usage
 
 ### 📋 Prerequisites
-* MATLAB (R2021a or newer recommended)
+* MATLAB (R2021a or newer recommended if you want to run this in MATLAB)
 
 ### Running the App
 1. Download or clone this repository.
 2. Open MATLAB and navigate to the project folder.
-3. Open the `app1.mlapp` file in **App Designer** or simply type the filename in the **Command Window** to run.
-
+3. Open the `app1.mltbx` file in **App Designer** or simply type the filename in the **Command Window** to run.
+4. Or simply run the .exe file.
 ---
 
 ## Disclaimer
@@ -50,4 +50,4 @@ This tool is built upon the mathematical frameworks established by:
 
 ---
 
-**Developed by:** ekah
+**Developed by:** ekah1500
